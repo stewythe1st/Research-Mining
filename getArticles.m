@@ -13,11 +13,10 @@ while records < total_records
     json = queryApi(apikey,...
                      'max_records=200',...
                      ['start_record=',num2str(records)],...
-                     'publication_year=2018',...
-                     'sort_field=article_number');
+                     ['publication_title=',urlencode('IEEE Transactions on Software Engineering')]);
     total_records = json.total_records;
     records = records + 200;
     articles = [articles;json.articles];
 end
 
-save('articles.mat','articles');
+save('SoftEngJournArticles.mat','articles');
