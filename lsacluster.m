@@ -2,12 +2,17 @@ clear;
 close all;
 
 % Read in abstracts
-load('SoftEngJournArticles.mat');
+load('data/IEEECommJournArticles.mat');
 abstracts(1:size(articles)) = tokenizedDocument;
 for i=1:numel(articles)
+    % Filter out articles that don't have an abstract
     if any(string(fieldnames(articles{i})) == 'abstract')
-        if numel(strsplit(articles{i}.abstract)) > 2
-            abstracts(i) = preprocess(articles{i}.abstract);
+        % Filter out any articles that have an html-based abstract
+        if ~contains(articles{i}.abstract,'</div>')
+            % Filter out any articles that have an empty abstract
+            if numel(strsplit(articles{i}.abstract)) > 2
+                abstracts(i) = preprocess(articles{i}.abstract);
+            end
         end
     end
 end
