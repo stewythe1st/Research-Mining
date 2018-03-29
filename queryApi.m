@@ -8,8 +8,9 @@ for i=1:numel(varargin)
 end
 
 % Make HTTP request
+options = matlab.net.http.HTTPOptions('ConnectTimeout',30);
 request = matlab.net.http.RequestMessage;
-response = request.send(url);
+response = request.send(url,options);
 json = response.Body.Data;
 
 end
