@@ -22,8 +22,13 @@ for i=1:numel(files)
         if any(string(fieldnames(articles{j})) == 'abstract') && ...
            ~contains(articles{j}.abstract,'</div>') && ...
            numel(strsplit(articles{j}.abstract)) > 2
-            abstracts(cnt) = preprocess(articles{j}.abstract);
-            cnt = cnt + 1;
+            try
+                abstracts(cnt) = preprocess(articles{j}.abstract);
+                cnt = cnt + 1;
+            % If it still fails, move on and throw the error as a warning
+            catch ME
+                %disp(getReport(ME,'extended','hyperlinks','on'));
+            end
         end
     end
     abstracts = abstracts(:,1:cnt);
