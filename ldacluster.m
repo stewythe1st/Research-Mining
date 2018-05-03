@@ -2,7 +2,7 @@ clear;
 close all;
 
 % Read in abstracts
-load('data/IEEECommJournArticles.mat');
+load('data/Articles/IEEEWkshpMachLearn.mat');
 abstracts(1:size(articles)) = tokenizedDocument;
 cnt = 1;
 for i=1:numel(articles)

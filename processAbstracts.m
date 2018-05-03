@@ -9,7 +9,7 @@ files = files(3:end);
 files = string(files);
 
 % Loop through each file of articles
-for i=1:numel(files)
+for i=16:numel(files)
     load(strcat(path,files(i)));
     
     % Extract abstract from each and turn into a tokenized document
