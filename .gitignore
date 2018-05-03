@@ -1,4 +1,26 @@
-pdfs
-data
-*.asv
+# Data
+pdfs/*
+data/*
 *.mat
+
+# Final Copy temp storage
+doc/final
+
+# MATLAB autosave files
+*.asv
+
+# MS OFfice temp files
+~$*
+
+# LaTeX intermediate files
+*.aux
+*.bak
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.synctex.gz
+
+# Misc temp files
+thumbs.db

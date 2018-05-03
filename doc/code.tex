@@ -1,0 +1,104 @@
+\documentclass{article}
+
+\usepackage[margin=1.0in]{geometry}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\begin{document}
+
+\pagenumbering{gobble}
+\setcounter{section}{6}
+\renewcommand{\thesubsection}{\Alph{subsection}.}
+
+\section{Appendix}
+
+\subsection{Forward}
+
+The functions utilized to prepare the data shown in the report are included below. Note that this is by no means a polished finished product. These are utility function and meant to be used and experimented with. Perhaps with additional time, these could have been prepared into a single application with a clean user interface, but that remains for the future work.
+
+Wherever possible, detailed function/script descriptions have been provided. Inline comments are provided for almost all of the code which explain the fine deatils while the description above provides a more high-level overview. With the exception of the spider\textunderscore plot() function (sometimes referred to as a radar plot), all functions not outlined here are included with MATLAB. spider\textunderscore plot() was obtained from the \href{https://www.mathworks.com/matlabcentral/fileexchange/59561-spider--radar--plot}{Mathworks File Exchange}. All credit to belongs to its original author.
+
+\subsection{ldacluster.m}
+\label{ldacluster}
+
+This script reads in a pre-saved data from a .mat file. For each paper, it will extract out the abstract, filtering out papers with missing or invalid abstracts. In doing so, it feeds each through the preprocess function. (See \ref{preprocess}.) It then makes a bag of words model for each and removes empty words. Finally, it selects a subset of the data and repeatedly runs LDA model fittings for the collection, aggregating the perplexity for each. At the end, it displays a topic distribution and a wordclouds.
+
+\lstinputlisting[language=Matlab,breaklines=true,frame=single,basicstyle=\scriptsize]{../ldacluster.m}
+
+\subsection{lsacluster.m}
+\label{lsacluster}
+
+This script reads in a pre-saved data from a .mat file. For each paper, it will extract out the abstract, filtering out papers with missing or invalid abstracts. In doing so, it feeds each through the preprocess function. (See \ref{preprocess}.) It then makes a bag of words model for each and removes empty words. Finally, it selects a subset of the data and runs an LSA model for the specified number of components. At the end, it displays a radar plot for the topic vectors and a wordclouds.
+
+\lstinputlisting[language=Matlab,breaklines=true,frame=single,basicstyle=\scriptsize]{../lsacluster.m}
+
+\subsection{plotNumTopics.m}
+
+This script plots the perplexity of all data sets. For each .mat saved data file in the specified directory, it reads in and displays the saved perplexity.
+
+\lstinputlisting[language=Matlab,breaklines=true,frame=single,basicstyle=\scriptsize]{../plotNumTopics.m}
+
+\subsection{preprocess.m}
+\label{preprocess}
+
+This function cleans and sanitizes input data. Before any processing can take place, all raw data must be fed through this function. It performs several steps: tokenizing, removing stopwords, removing words that are too big or too small, and finally runs each word through MATLAB's build-in Porter stemmer function.
+
+\lstinputlisting[language=Matlab,breaklines=true,frame=single,basicstyle=\scriptsize]{../preprocess.m}
+
+\subsection{processAbstracts.m}
+
+This is an abbreviated version of \ref{ldacluster} and \ref{lsacluster}. It simply extracts abstracts and does not attempt any model fittings. It reads in all files in the specified directory. For each paper in each file, it will extract out the abstract, filtering out papers with missing or invalid abstracts. In doing so, it feeds each through the preprocess function. (See \ref{preprocess}.) It then makes a bag of words model for each and removes empty words.
+
+\lstinputlisting[language=Matlab,breaklines=true,frame=single,basicstyle=\scriptsize]{../processAbstracts.m}
+
+\subsection{processFinalMDL.m}
+
+Once a number of topics has been chosen based on the perplexity distribution in \ref{ldacluster}, this function is called to generate a single LDA and LSA model based on the number of topics chosen. Function runs for all saved data files in the specified directory. See \url{https://developer.ieee.org/docs/read/Metadata_API_details} for all available parameters.
+
+\lstinputlisting[language=Matlab,breaklines=true,frame=single,basicstyle=\scriptsize]{../processFinalMDL.m}
+
+\subsection{queryApi.m}
+\label{queryapi}
+
+This functions creates a web request in the format the the IEEE XPlore API expects. HTTP get parameters can be passed as arguments to this MATLAB function and they will be appended to the query. See 
+
+\lstinputlisting[language=Matlab,breaklines=true,frame=single,basicstyle=\scriptsize]{../queryApi.m}
+
+\subsection{graphPPLAll.m}
+
+This script creates the scatter plot of paper perplexity vs. number of papers. It aggregates the data from earlier processing functions and creates a scatter plot and text labels.
+
+\lstinputlisting[language=Matlab,breaklines=true,frame=single,basicstyle=\scriptsize]{../script.m}
+
+\subsection{tfidf.m}
+\label{tfidf}
+
+This script creates a TF-IDF ranking of all collections in a specified directory (specified on line 10) according to the term input on line 6. A bar chart is created and each data set in the directory is added to the bar chart.
+
+\lstinputlisting[language=Matlab,breaklines=true,frame=single,basicstyle=\scriptsize]{../tfidf.m}
+
+\subsection{tfidfCluster.m}
+
+This performs much the same function as \ref{tfidf}, but does it for two terms (lines 6 and 7). Instead of a bar graph, a scatter plot is created, plotting the two term's tf-idf ranking comparatively.
+
+\lstinputlisting[language=Matlab,breaklines=true,frame=single,basicstyle=\scriptsize]{../tfidfCluster.m}
+
+\subsection{getAbstractFromArnum.m}
+
+This utility function provides a quick way to retrieve only the abstract from a given IEEE document reference number. It creates and formats a web response formatted to pull data from plain HTML, rather than the IEEE API (as the API is limited to 200 queries per day). A valid session cookie from the university's library proxy will need to be obtained so that the web request .
+
+\lstinputlisting[language=Matlab,breaklines=true,frame=single,basicstyle=\scriptsize]{../getAbstractFromArnum.m}
+
+\subsection{getArticles.m}
+
+This is a specialized version of \ref{queryapi} that pulls the maximum allowed number of records for a specific publication. This function was heavily used for example 2 in the paper. For as long as the API continues to return requests, the script will increment the records counter and request new data. If an error code is returned instead of valid data, the script will abort. Upon completion, the data is saved to a .mat file that can be read by the various other scripts and functions listed here.
+
+\lstinputlisting[language=Matlab,breaklines=true,frame=single,basicstyle=\scriptsize]{../getArticles.m}
+
+\subsection{graphPerplexity.m}
+
+This function graphs the perplexity of all articles in a specified directory (input on line 5). Assuming they have already been processed by a fitting model, the perplexities are aggregated and placed on a chart.
+
+\lstinputlisting[language=Matlab,breaklines=true,frame=single,basicstyle=\scriptsize]{../graphPerplexity.m}
+
+\end{document}
